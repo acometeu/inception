@@ -1,0 +1,26 @@
+FROM alpine:3.18
+RUN apk get update &&\
+	apk upgrade &&\
+	apk add wget &&\
+	apk add unzip &&\
+	apk add php-fpm &&\
+	apk add php-mysqli &&\
+	apk add mysql-client &&\
+	apk add wget
+
+RUN wget https://fr.wordpress.org/latest-fr_FR.zip -P /var/www &&\
+	cd /var/www &&\
+	unzip latest-fr_FR.zip  &&\
+	rm latest-fr_FR.zip &&\
+	chown -R root:root /var/www/wordpress
+
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &&\
+	chmod +x wp-cli.phar &&\
+	mv wp-cli.phar /usr/local/bin/wp
+
+COPY /conf/www.conf /etc/php81/php-fpm.d/www.conf
+COPY /conf/auto_config.sh ./auto_config.sh
+
+EXPOSE 9000
+
+ENTRYPOINT ["./auto_config.sh"]
