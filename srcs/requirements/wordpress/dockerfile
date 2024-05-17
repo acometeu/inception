@@ -19,7 +19,7 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 	mv wp-cli.phar /usr/local/bin/wp
 
 COPY /conf/www.conf /etc/php81/php-fpm.d/www.conf
-COPY /conf/auto_config.sh ./auto_config.sh
+COPY --chmod=777 /tools/auto_config.sh ./auto_config.sh
 
 EXPOSE 9000
 

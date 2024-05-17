@@ -5,32 +5,32 @@ services:
   container_name: mariadb
   image: mariadb_acomet
   networks:
-  - inception
+    - inception
   build:
    context: requirements/mariadb
    dockerfile: dockerfile
   env_file: .env
   volumes:
-  - database:/var/lib/mysql
-  restart: unless-stopped
+    - database:/var/lib/mysql
+  restart: always
   expose:
-  - "3306"
+    - "3306"
 
  nginx:
   container_name: nginx
   image: nginx_acomet
   volumes:
-  - www:/var/www/html
+    - www:/var/www/html
   networks:
-  - inception
+    - inception
   depends_on:
-  - wordpress
+    - wordpress
   build:
    context: requirements/nginx
    dockerfile: dockerfile
   env_file: .env
   ports:
-  - "443:443"
+    - "443:443"
   restart: on-failure
 
  wordpress:
@@ -38,17 +38,17 @@ services:
   image: wordpress_acomet
   env_file: .env
   volumes:
-  - www:/var/www/html
+    - www:/var/www/html
   networks:
-  - inception
+    - inception
   build:
    context: requirements/wordpress
    dockerfile: dockerfile
   depends_on:
-  - mariadb
+    - mariadb
   restart: on-failure
   expose:
-  - "9000"
+    - "9000"
 
 volumes:
  www:
