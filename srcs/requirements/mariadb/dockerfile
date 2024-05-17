@@ -1,15 +1,17 @@
 FROM alpine:3.18
 
-RUN apk get update &&\
+RUN apk update &&\
 	apk upgrade &&\
 	apk add mysql mysql-client mariadb-server-utils &&\
 	mkdir /run/mysqld &&\
 	chown -R mysql:root /run/mysqld &&\
-	rm -f /var/cache/apk/*
+	chown -R mysql:mysql /var/lib/mysql &&\
+	rm -f /var/cache/apk/* &&\
+	rm -rf /etc/my.cnf.d/mariadb-server.cnf
 
 COPY /conf/mariadb-server.cnf /etc/my.cnf.d/mariadb-server.cnf
-COPY /tools/script.sh /etc/my.cnf.d/script.sh
+COPY /tools/script.sh .
 
 EXPOSE 3306
 
-ENTRYPOINT ["./etc/my.cnf.d/script.sh"]
+ENTRYPOINT ["./script.sh"]

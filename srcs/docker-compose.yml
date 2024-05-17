@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
  mariadb:
   container_name: mariadb
@@ -31,7 +29,7 @@ services:
   env_file: .env
   ports:
     - "443:443"
-  restart: on-failure
+  restart: always
 
  wordpress:
   container_name: wordpress
@@ -46,18 +44,20 @@ services:
    dockerfile: dockerfile
   depends_on:
     - mariadb
-  restart: on-failure
+  restart: always
   expose:
     - "9000"
 
 volumes:
  www:
+  name: www
   driver: local
   driver_opts:
    type: none
    o: bind
    device: "${WWW_PATH}"
  database:
+  name: database
   driver: local
   driver_opts:
    type: none
@@ -66,4 +66,5 @@ volumes:
 
 networks:
  inception:
+  name: inception
   driver: bridge
